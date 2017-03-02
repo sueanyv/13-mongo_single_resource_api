@@ -1,11 +1,11 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-const listSchema = Schema({
-  name: { type: String, required: true },
-  timestamp: { type: Data, required: true }
+const articleSchema = Schema({
+  title: { type: String, required: true },
+  timestamp: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model('list', listSchema);
+module.exports = mongoose.model('article', articleSchema);

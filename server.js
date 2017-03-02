@@ -7,7 +7,7 @@ const cors = require('cors');
 const Promise = require('bluebird');
 const mongoose = require('mongoose');
 const debug = require('debug')('blog:server');
-const listRouter = require('./route/blog-route.js');
+const articleRouter = require('./route/article-route.js');
 
 const app = express();
 
@@ -19,8 +19,8 @@ mongoose.connect(MONGODB_URI);
 
 app.use(cors());
 app.use(morgan('dev'));
-app.use(listRouter);
+app.use(articleRouter);
 
 app.listen(PORT, function() {
-  debug(`server up: ${PORT}`);
+  console.log(`server up: ${PORT}`);
 });
