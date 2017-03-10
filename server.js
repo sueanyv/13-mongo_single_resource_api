@@ -8,7 +8,7 @@ const Promise = require('bluebird');
 const mongoose = require('mongoose');
 const debug = require('debug')('blog:server');
 const articleRouter = require('./route/article-route.js');
-
+const error = require('error-middleware.js');
 const app = express();
 
 const PORT = process.env.PORT || 3000;

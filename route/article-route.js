@@ -4,11 +4,14 @@ const Router = require('express').Router;
 const jsonParser = require('body-parser').json();
 const Article = require('../model/article.js');
 const articleRouter = module.exports = new Router();
+const errorHandler = require('http-errors');
 
 articleRouter.post('/api/article', jsonParser, function(req, res, next) {
+ if(!req.body) return next(errorHandler(400, 'bad request'));
   req.body.timestamp = new Date();
   new Article(req.body).save()
-  .then(article => res.json(article))
+  .then(article =>
+    res.json(article))
   .catch(next);
 });
 

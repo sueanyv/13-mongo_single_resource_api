@@ -17,11 +17,11 @@ const exampleArticle = {
 describe('Article Routes', function() {
   describe('POST: /api/article', function() {
     describe('with a valid body', function() {
-      after( done => {
+      after(done => {
         if (this.tempArticle) {
           Article.remove({})
-          .then(() => done())
-          .catch(done);
+            .then(() => done())
+            .catch(done);
           return;
         }
         done();
@@ -29,36 +29,50 @@ describe('Article Routes', function() {
 
       it('should return a article', done => {
         request.post(`${url}/api/article`)
-        .send(exampleArticle)
-        .end((err, res) => {
-          if (err) return done(err);
-          expect(res.status).to.equal(200);
-          expect(res.body.title).to.equal('test article title');
-          this.tempArticle = res.body;
-          done();
-        });
+          .send(exampleArticle)
+          .end((err, res) => {
+            if (err) return done(err);
+            expect(res.status).to.equal(200);
+            expect(res.body.title).to.equal('test article title');
+            this.tempArticle = res.body;
+            done();
+          });
+      });
+    });
+    describe('with a bad request', function() {
+      it('should return a 400 error', done => {
+        request.post(`${url}/api/article`)
+          .end((err, res) => {
+            if (err) {
+              expect(err.status).to.equal(400);
+              expect(err.body).to.equal(undefined);
+              done();
+            }
+            done();
+          });
       });
     });
   });
 
+
   describe('GET: /api/article/:id', function() {
     describe('with a valid body', function() {
-      before( done => {
+      before(done => {
         exampleArticle.timestamp = new Date();
         new Article(exampleArticle).save()
-        .then( article => {
-          this.tempArticle = article;
-          done();
-        })
-        .catch(done);
+          .then(article => {
+            this.tempArticle = article;
+            done();
+          })
+          .catch(done);
       });
 
-      after( done => {
+      after(done => {
         delete exampleArticle.timestamp;
-        if(this.tempArticle) {
+        if (this.tempArticle) {
           Article.remove({})
-          .then(() => done())
-          .catch(done);
+            .then(() => done())
+            .catch(done);
           return;
         };
         done();
@@ -66,12 +80,12 @@ describe('Article Routes', function() {
 
       it('should return a article', done => {
         request.get(`${url}/api/article/${this.tempArticle._id}`)
-        .end((err, res) => {
-          if (err) return done(err);
-          expect(res.status).to.equal(200);
-          expect(res.body.title).to.equal('test article title');
-          done();
-        });
+          .end((err, res) => {
+            if (err) return done(err);
+            expect(res.status).to.equal(200);
+            expect(res.body.title).to.equal('test article title');
+            done();
+          });
       });
     });
   });
