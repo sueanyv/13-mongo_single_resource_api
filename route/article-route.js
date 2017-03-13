@@ -34,3 +34,9 @@ articleRouter.put('/api/article/:id', jsonParser, function(req, res, next){
   })
   .catch(next);
 });
+
+articleRouter.delete('/api/article/:id', function(req, res, next){
+Article.findById(req.params.id)
+.then(article =>{
+});
+});

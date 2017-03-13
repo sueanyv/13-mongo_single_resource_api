@@ -116,42 +116,62 @@ describe('Blog Routes', function() {
         })
       })
       describe('testing put method on api', function() {
-        let newTitle = {
-          title: 'title',
-          timestamp: new Date()
-        };
+            let newTitle = {
+              title: 'title',
+              timestamp: new Date()
+            };
 
-        before(done => {
-          exampleBlog.timestamp = new Date();
-          new Blog(exampleBlog).save()
-            .then(blog => {
-              this.tempBlog = blog;
+            before(done => {
+              exampleBlog.timestamp = new Date();
+              new Blog(exampleBlog).save()
+                .then(blog => {
+                  this.tempBlog = blog;
+                  done();
+                })
+                .catch(done);
+            });
+            after(done => {
+              delete exampleBlog.timestamp;
+              if (this.tempBlog) {
+                Blog.remove({})
+                  .then(() => done())
+                  .catch(done);
+                return;
+              };
               done();
-            })
-            .catch(done);
-        });
-        after(done => {
-          delete exampleBlog.timestamp;
-          if (this.tempBlog) {
-            Blog.remove({})
-              .then(() => done())
-              .catch(done);
-            return;
-          };
-          done();
-        });
-        describe('valid put request', () => {
-          it('should return a 200', done => {
-            request.put(`${url}/api/article/${this.tempBlog._id}`)
-            .send(newTitle)
-            .end((err, res) => {
-              console.log(res.body);
-              if(err) return done(err);
-              expect(res.status).to.equal(200);
-              expect(res.body.title).to.equal('title');
-              done();
+            });
+            describe('valid put request', () => {
+              it('should return a 200', done => {
+                request.put(`${url}/api/article/${this.tempBlog._id}`)
+                  .send(newTitle)
+                  .end((err, res) => {
+                    console.log(res.body);
+                    if (err) return done(err);
+                    expect(res.status).to.equal(200);
+                    expect(res.body.title).to.equal('title');
+                    done();
+                  });
+              });
+            });
+            describe('not found', () => {
+              it('should return a 404 error', done => {
+                request.put(`${url}/api/article`)
+                  .end((err, res) => {
+                    expect(res.status).to.equal(404);
+                    expect(err.message).to.equal('Not Found');
+                    done();
+                  });
+              });
+            });
+            describe('bad request', () => {
+              it('should return a 400 error', done => {
+                request.put(`${url}/api/article${this.tempBlog._id}`)
+                  .end((err, res) => {
+                    expect(res.status).to.equal(400);
+                    expect(err.message).to.equal('Bad Request');
+                    done();
+                  });
+              });
             });
           });
         });
-      });
-    });
